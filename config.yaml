@@ -1,0 +1,6 @@
+ACTION_PATH:
+  DATA_PATH: /root/dingmengru/data/action/v04-1/data
+  EMB_PATH: /root/dingmengru/model/word_emb
+  MODEL_SAVE_PATH: /root/dingmengru/model/writing_correction_action
+  TAG_PATH: /root/dingmengru/data/action/tags/7984_action/第三批/标注结果/第三次验收
+  PRETRAIN_MODEL: /root/dingmengru/model/pretrained_bert/chinese_wwm_ext_pytorch

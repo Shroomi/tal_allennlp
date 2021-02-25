@@ -9,3 +9,4 @@
 @Desc:
 
 """
+from allennlp.models.basic_classifier import *

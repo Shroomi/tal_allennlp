@@ -11,23 +11,22 @@
 """
 from typing import Iterable
 
-from allennlp.data import DatasetReader, Instance, Vocabulary
 from allennlp.models import Model
+from allennlp.data import DatasetReader, Instance, Vocabulary
+from allennlp.data.tokenizers.pretrained_transformer_tokenizer import PretrainedTransformerTokenizer
+from allennlp.data.token_indexers.pretrained_transformer_indexer import PretrainedTransformerIndexer
 
-from tal_allennlp.data.tokenizers.jieba_tokenizer import JiebaTokenizer
-from tal_allennlp.data.token_indexers.wordpiece_indexer import PretrainedBertIndexer
 from tal_allennlp.data.dataset_readers.dataset_utils.writing_correction_data_loader import ActionCLSTrainDataReader
 
 from config import *
 
 
 def build_dataset_reader() -> DatasetReader:
-    token_indexers = PretrainedBertIndexer(pretrained_model=PRETRAIN_MODEL,
-                                           do_lowercase=False,
-                                           use_starting_offsets=False,
-                                           )
-    return ActionCLSTrainDataReader(max_tokens=150, token_indexers={'tokens': token_indexers})
-    # return ActionCLSTrainDataReader(max_tokens=150)
+    tokenizer = PretrainedTransformerTokenizer(model_name=PRETRAIN_MODEL)
+    token_indexers = PretrainedTransformerIndexer(model_name=PRETRAIN_MODEL)
+    return ActionCLSTrainDataReader(tokenizer=tokenizer,
+                                    token_indexers={'bert': token_indexers},
+                                    max_tokens=150,)
 
 
 def read_data(reader: DatasetReader, train_file_name, valid_file_name):

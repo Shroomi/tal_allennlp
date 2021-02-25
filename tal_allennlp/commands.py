@@ -3,10 +3,10 @@
 """
 @Author: dingmengru
 @Contact: dingmengru1993@gmail.com
-@File: __init__.py.py
+@File: commands.py
 @Software: PyCharm
-@Time: 2021/2/18 9:19 下午
+@Time: 2021/2/25 11:10 上午
 @Desc:
 
 """
-from allennlp.data.tokenizers.pretrained_transformer_tokenizer import *
+from allennlp.commands.train import *

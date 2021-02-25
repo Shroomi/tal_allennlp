@@ -113,7 +113,7 @@ class BasicClassifierF1(Model):
         return output_dict
 
     @overrides
-    def decode(self, output_dict: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
+    def make_output_human_readable(self, output_dict: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
         """
         Does a simple argmax over the probabilities, converts index to string label, and
         add ``"label"`` key to the dictionary with the result.

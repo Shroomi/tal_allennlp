@@ -5,8 +5,8 @@
 @Contact: dingmengru1993@gmail.com
 @File: __init__.py.py
 @Software: PyCharm
-@Time: 2021/2/18 9:19 下午
+@Time: 2021/2/25 1:14 上午
 @Desc:
 
 """
-from allennlp.data.tokenizers.pretrained_transformer_tokenizer import *
+from allennlp.modules.token_embedders import pretrained_transformer_embedder

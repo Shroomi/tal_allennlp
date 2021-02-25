@@ -24,3 +24,4 @@ tal_allennlp
 ### 参考文献
 - allennlp官方教程：<https://guide.allennlp.org/overview>
 - allennlp注册机制：<https://guide.allennlp.org/using-config-files>
+- hugging face手册：<https://huggingface.co/transformers/>

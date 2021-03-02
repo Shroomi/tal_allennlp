@@ -5,12 +5,13 @@
         "tokenizer": {
             "type": "pretrained_transformer",
             "model_name": "/root/dingmengru/model/pretrained_bert/chinese_wwm_ext_pytorch",
-            "do_lowercase": true
+            "max_length": 150
         },
         "token_indexers": {
             "bert": {
                 "type": "pretrained_transformer",
-                "pretrained_model": "/root/dingmengru/model/pretrained_bert/chinese_wwm_ext_pytorch",
+                "model_name": "/root/dingmengru/model/pretrained_bert/chinese_wwm_ext_pytorch",
+                "max_length": 150
             }
         }
     },
@@ -19,16 +20,12 @@
     "model": {
         "type": "text_classifier_fscore_focal_loss",
         "text_field_embedder": {
-            "allow_unmatched_keys": true,
-            "embedder_to_indexer_map": {
-                "bert": ["bert", "bert-offsets"],
-            },
             "token_embedders": {
                 "bert": {
                     "type": "pretrained_transformer",
-                    "pretrained_model": "/root/dingmengru/model/pretrained_bert/chinese_wwm_ext_pytorch",
-                    "last_layer_only": false,
-                    "train_parameters": false
+                    "model_name": "/root/dingmengru/model/pretrained_bert/chinese_wwm_ext_pytorch",
+                    "last_layer_only": true,
+                    "train_parameters": true
                 }
             }
         },
@@ -38,21 +35,20 @@
            "requires_grad": false
         },
         "dropout": 0.25,
-        "loss":"cross_entropy_loss"
+        "loss":"focal_loss"
 },
-    "iterator": {
-        "type": "bucket",
-        "sorting_keys": [["tokens", "num_tokens"]],
-        "batch_size": 5
+
+    "data_loader": {
+        "batch_size": 16,
+        "shuffle": true
     },
     "trainer": {
         "optimizer": {
-            "type": "adam",
-            "lr": 0.001
+            "type": "huggingface_adamw",
+            "lr": 1.0e-5
         },
+        "num_epochs": 5,
         "validation_metric": "+accuracy",
-        "num_serialized_models_to_keep": 1,
-        "num_epochs": 15,
         "grad_norm": 10.0,
         "patience": 5,
         "cuda_device": 0

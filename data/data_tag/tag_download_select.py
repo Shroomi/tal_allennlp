@@ -3,7 +3,7 @@
 """
 @Author: dingmengru
 @Contact: dingmengru1993@gmail.com
-@File: utils.py
+@File: tag_download_select.py
 @Software: PyCharm
 @Time: 2021/2/24 11:29 上午
 @Desc: 存储一些临时处理脚本
@@ -54,6 +54,12 @@ class TagProcess(object):
         return self.text_tag_dict
 
     def get_final_tag(self, input_file_name, output_path):
+        """
+        从5个标注人员的标注结果中，选取投票大于等于4的投票结果，其余数据抛弃
+        :param input_file_name:
+        :param output_path:
+        :return:
+        """
         with open(os.path.join(DATA_PATH, input_file_name), 'r') as fin, \
                 open(os.path.join(output_path), 'w', encoding='utf-8') as fout:
             train_file = json.load(fin)

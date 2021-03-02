@@ -3,7 +3,7 @@
 """
 @Author: dingmengru
 @Contact: dingmengru1993@gmail.com
-@File: utils.py
+@File: tag_download_select.py
 @Software: PyCharm
 @Time: 2021/2/19 10:04 下午
 @Desc: 数据相关的utils
@@ -81,7 +81,13 @@ def write_pickle(file_path, data_dict):
         pickle.dump(data_dict, fout)
 
 
-def process_other_data(data_path, file_name):
+def process_other_data(data_path, file_name, source='train'):
+    """
+    将数据转换成jsonl格式
+    :param data_path:
+    :param file_name:
+    :return:
+    """
     data = pd.read_json(os.path.join(data_path, file_name), orient='records')
     with open(os.path.join(data_path, file_name.split('.')[0]+'.jsonl'), 'w', encoding='utf-8') as fout:
         for index, row in tqdm(data.iterrows()):
@@ -89,9 +95,15 @@ def process_other_data(data_path, file_name):
             fout.write(json.dumps(
                 {
                     'text': row['text'],
-                    'label': row['label']
+                    'label': row['label'],
+                    'source': source
                 }, ensure_ascii=False
             ) + '\n')
+
+
+def cal_pos_neg(data_path, file_name):
+    data_frame = pd.read_json(os.path.join(data_path, file_name), lines=True)
+    print(data_frame['label'].value_counts()[0] / data_frame['label'].value_counts()[1])
 
 
 if __name__ == '__main__':
@@ -100,4 +112,5 @@ if __name__ == '__main__':
     """
     # load_emb_info('tencent_big')
     # load_dense_drop_repeat('tencent_big', 'v04_embeddings.json', 200)
-    process_other_data(DATA_PATH, 'train_ding.json')
+    process_other_data(DATA_PATH, 'test_old_ding.json', source='test_old')
+    # cal_pos_neg(DATA_PATH, 'tmp_tr.jsonl')

@@ -35,7 +35,7 @@ def apply_for_tag(data_path, input_file='train.jsonl', output_file='total_label.
             each_passage['textarea'].append({
                 'textId': textId,
                 'textNum': textNum,
-                'textContent': data['source']+'###'+data['text'],
+                'textContent': data['essay_id']+'###'+str(data['sentence_id'])+'###'+data['sentence_text'],
             })
             textId += 1
             textNum += 1

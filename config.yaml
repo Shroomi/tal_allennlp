@@ -1,5 +1,5 @@
 ACTION_PATH:
-  DATA_PATH: /root/dingmengru/data/action/v05
+  DATA_PATH: /root/dingmengru/data/action/peopel_daily_2014_ner
   EMB_PATH: /root/dingmengru/model/word_emb
   MODEL_SAVE_PATH: /root/dingmengru/model/writing_correction_action
   TAG_PATH: /root/dingmengru/data/action/tags/7984_action/第三批/标注结果/第三次验收

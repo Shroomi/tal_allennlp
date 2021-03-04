@@ -101,6 +101,25 @@ def process_other_data(data_path, file_name, source='train'):
             ) + '\n')
 
 
+def people_daily_preprocess(source_file=None, target_file=None, output_file='train.jsonl'):
+    source_list = []
+    target_list = []
+    with open(os.path.join(DATA_PATH, source_file), 'r') as fin_source:
+        for line in fin_source:
+            source_list.append(line.strip())
+    with open(os.path.join(DATA_PATH, target_file), 'r') as fin_target:
+        for line in fin_target:
+            target_list.append(line.strip())
+    i = 0
+    with open(os.path.join(DATA_PATH, output_file), 'w', encoding='utf-8') as fout:
+        while i < len(source_list):
+            fout.write(json.dumps({
+                'text': source_list[i],
+                'tags': target_list[i]
+            }, ensure_ascii=False) + '\n')
+            i += 1
+
+
 def cal_pos_neg(data_path, file_name):
     data_frame = pd.read_json(os.path.join(data_path, file_name), lines=True)
     print(data_frame['label'].value_counts()[0] / data_frame['label'].value_counts()[1])
@@ -112,5 +131,6 @@ if __name__ == '__main__':
     """
     # load_emb_info('tencent_big')
     # load_dense_drop_repeat('tencent_big', 'v04_embeddings.json', 200)
-    process_other_data(DATA_PATH, 'test_old_ding.json', source='test_old')
+    # process_other_data(DATA_PATH, 'test_old_ding.json', source='test_old')
     # cal_pos_neg(DATA_PATH, 'tmp_tr.jsonl')
+    people_daily_preprocess(source_file='source_BIO_2014_cropus.txt', target_file='target_BIO_2014_cropus.txt')

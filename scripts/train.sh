@@ -1,2 +1,0 @@
-allennlp train training_configs/bert_clf_test.jsonnet -f -s debug_bert_clf --include-package tal_allennlp
-allennlp evaluate debug_bert_clf/model.tar.gz /root/dingmengru/data/action/v05/test_ding.jsonl --include-package tal_allennlp

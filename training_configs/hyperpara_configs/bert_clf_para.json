@@ -10,14 +10,6 @@
   {
     "type": "float",
     "attributes": {
-      "name": "dropout",
-      "low": 0.0,
-      "high": 0.3
-    }
-  },
-  {
-    "type": "float",
-    "attributes": {
       "name": "lr",
       "low": 1e-5,
       "high": 5e-4,

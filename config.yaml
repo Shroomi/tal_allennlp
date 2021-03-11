@@ -2,5 +2,5 @@ ACTION_PATH:
   DATA_PATH: /root/dingmengru/data/action/include_animal_v1
   EMB_PATH: /root/dingmengru/model/word_emb
   MODEL_SAVE_PATH: /root/dingmengru/model/writing_correction_action
-  TAG_PATH: /root/dingmengru/data/action/tags/writing_correction/echo_question/first_check
+  TAG_PATH: /root/dingmengru/data/action/tags/writing_correction/appearance/first_check
   PRETRAIN_MODEL: /root/dingmengru/model/pretrained_bert/chinese_wwm_ext_pytorch

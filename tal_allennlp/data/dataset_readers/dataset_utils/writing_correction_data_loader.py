@@ -9,7 +9,6 @@
 @Desc: 载入动作描写分类数据
 
 """
-import os
 import json
 import logging
 from typing import Dict, Iterable

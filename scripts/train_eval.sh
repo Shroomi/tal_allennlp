@@ -15,6 +15,24 @@ allennlp evaluate /root/dingmengru/model/writing_correction_action/bert_clf_optu
   /root/dingmengru/data/action/include_animal_v1/test_greater4.jsonl \
   --include-package tal_allennlp
 
+# transformer classifier
+allennlp train training_configs/model_configs/transformer_clf.jsonnet \
+  -f -s /root/dingmengru/model/writing_correction_action/allennlp_transformer_clf \
+  --include-package tal_allennlp
+
+# transformer classifier with hyperparameters
+allennlp tune \
+  training_configs/model_configs/transformer_clf.jsonnet \
+  training_configs/hyperpara_configs/transformer_clf_para.json \
+  --serialization-dir /root/dingmengru/model/writing_correction_action/transformer_clf_optuna2 \
+  --study-name transformer_clf_optuna2 \
+  --timeout 36000 \
+  --direction maximize \
+  --include-package tal_allennlp
+allennlp evaluate /root/dingmengru/model/writing_correction_action/transformer_clf_optuna2/trial_0/model.tar.gz \
+  /root/dingmengru/data/action/include_animal_v1/test_greater4.jsonl \
+  --include-package tal_allennlp
+
 # bert+crf tagger
 allennlp train training_configs/model_configs/bert_crf_tagger.jsonnet -f -s bert_crf_tagger --include-package tal_allennlp
 allennlp evaluate bert_crf_tagger/model.tar.gz /root/dingmengru/data/action/peopel_daily_2014_ner/test.jsonl --include-package tal_allennlp

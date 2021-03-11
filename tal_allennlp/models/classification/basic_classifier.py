@@ -19,7 +19,7 @@ from allennlp.models.model import Model
 from allennlp.nn.util import get_text_field_mask
 from allennlp.nn import InitializerApplicator, RegularizerApplicator
 from allennlp.modules import TextFieldEmbedder, Seq2VecEncoder, Seq2SeqEncoder, FeedForward
-from allennlp.training.metrics import CategoricalAccuracy
+from allennlp.training.metrics import CategoricalAccuracy, F1Measure
 from allennlp.training.metrics.fbeta_measure import FBetaMeasure
 
 from tal_allennlp.modules.loss.focal_loss import FocalLoss
@@ -82,14 +82,15 @@ class BasicClassifierF1(Model):
             self._loss = torch.nn.CrossEntropyLoss()
         else:
             raise ValueError('wrong loss type')
-        self._f1_measure = FBetaMeasure()
+        # self._f1_measure = FBetaMeasure()
+        self._f1_measure = F1Measure(1)
         initializer(self)
 
     def forward(self,
                 tokens: Dict[str, torch.LongTensor],
                 label: torch.IntTensor = None) -> Dict[str, torch.Tensor]:
         embedded_text = self._text_field_embedder(tokens)
-        mask = get_text_field_mask(tokens).float()
+        mask = get_text_field_mask(tokens)
 
         if self._seq2seq_encoder:
             embedded_text = self._seq2seq_encoder(embedded_text, mask=mask)
@@ -134,13 +135,16 @@ class BasicClassifierF1(Model):
         return output_dict
 
     def get_metrics(self, reset: bool = False) -> Dict[str, float]:
-        f1_dict = self._f1_measure.get_metric(reset)
-        output = {}
-        output['accuracy'] = self._accuracy.get_metric(reset=reset)
-        counter = 0
-        for precision, recall, fscore in zip(f1_dict['precision'], f1_dict['recall'], f1_dict['fscore']):
-            output[str(counter) + '_precision'] = precision
-            output[str(counter) + '_recall'] = recall
-            output[str(counter) + '_fscore'] = fscore
-            counter += 1
-        return output
+        # f1_dict = self._f1_measure.get_metric(reset)
+        # output = {}
+        # output['accuracy'] = self._accuracy.get_metric(reset=reset)
+        # counter = 0
+        # for precision, recall, fscore in zip(f1_dict['precision'], f1_dict['recall'], f1_dict['fscore']):
+        #     output[str(counter) + '_precision'] = precision
+        #     output[str(counter) + '_recall'] = recall
+        #     output[str(counter) + '_fscore'] = fscore
+        #     counter += 1
+        # return output
+        metrics = {"accuracy": self._accuracy.get_metric(reset)}
+        metrics.update(self._f1_measure.get_metric(reset))
+        return metrics

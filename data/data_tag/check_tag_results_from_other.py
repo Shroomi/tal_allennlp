@@ -105,7 +105,7 @@ def run():
     check_tags = CheckTags()
     if user_para == 'check':
         # 检查标注人员标注结果是否符合要求
-        check_tags.check_tag_file('tag_standard_echo_question.jsonl', '8217', '.jsonl')
+        check_tags.check_tag_file('tag_standard_appearance.jsonl', 'final', 'greater4.jsonl')
     elif user_para == 'write':
         # 将标注人员的标注结果转换成jsonl格式文件
         tag_files_list = os.listdir(TAG_PATH)

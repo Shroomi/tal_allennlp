@@ -3,10 +3,10 @@
 """
 @Author: dingmengru
 @Contact: dingmengru1993@gmail.com
-@File: tag_download_select.py
+@File: tag_download_select_from_other.py
 @Software: PyCharm
-@Time: 2021/2/24 11:29 上午
-@Desc: 存储一些临时处理脚本
+@Time: 2021/3/10 7:43 下午
+@Desc:
 
 """
 import json
@@ -44,9 +44,13 @@ class TagProcess(object):
                 file_data = json.load(fin)
                 tag_data = file_data['true_message']['datas']
                 for tag_info in tag_data:
+                    essay_id = tag_info['text_name']
                     for info in tag_info['mark_datas']:
-                        text = info['section_text']
+                        text = essay_id + '###' + info['section_text']
                         label = info['label'][0]['children'][0]
+                        # 去重
+                        if text in self.text_tag_dict and len(self.text_tag_dict[text]) >= 5:
+                            continue
                         self.text_tag_dict[text].append(label)
         print('tag file path:', tag_path)
         print('Finish getting all tags from five people!')
@@ -86,18 +90,18 @@ class TagProcess(object):
         :return:
         """
         with open(os.path.join(TAG_PATH, output_file), 'w', encoding='utf-8') as fout:
-            for text_tmp, label_list in tqdm(self.text_tag_dict.items()):
+            for id_text, label_list in tqdm(self.text_tag_dict.items()):
                 most_label = Counter(label_list).most_common(1)[0]
-                if '游春悠悠漫步在小溪边，目光被一簇粉红吸引静默了一秋冬的桃枝上竟冒出串串花苞' in text_tmp:
+                if '游春悠悠漫步在小溪边，目光被一簇粉红吸引静默了一秋冬的桃枝上竟冒出串串花苞' in id_text:
                     print(label_list)
-                if most_label[1] >= 3:
-                    text_split = text_tmp.split('###', 1)
-                    text = text_split[1]
-                    source = text_split[0]
+                if most_label[1] >= 4:
+                    text_tmp = id_text.split('###')
+                    essay_id = text_tmp[0]
+                    text = text_tmp[1]
                     fout.write(json.dumps({
                         'text': text,
                         'label': most_label[0],
-                        'source': source
+                        'essay_id': essay_id
                     }, ensure_ascii=False) + '\n')
 
 
@@ -105,4 +109,4 @@ if __name__ == '__main__':
     tag_process = TagProcess()
     text_tag = tag_process.all_people_tags()
     # tag_process.get_final_tag('train.json', '/root/dingmengru/data/action/v05/train_zh.json')
-    tag_process.write_final_tag('final_tag_greater3.jsonl')
+    tag_process.write_final_tag('final_tag_greater4.jsonl')

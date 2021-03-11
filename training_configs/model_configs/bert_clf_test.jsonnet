@@ -1,3 +1,7 @@
+local batch_size = std.parseInt(std.extVar('batch_size'));
+local dropout = std.parseJson(std.extVar('dropout'));
+local lr = std.parseJson(std.extVar('lr'));
+
 {
     "dataset_reader": {
         "lazy": false,
@@ -15,8 +19,8 @@
             }
         }
     },
-    "train_data_path": "/root/dingmengru/data/action/v04-1/data/train_ding.jsonl",
-    "validation_data_path": "/root/dingmengru/data/action/v04-1/data/valid_ding.jsonl",
+    "train_data_path": "/root/dingmengru/data/action/include_animal_v1/train_greater4.jsonl",
+    "validation_data_path": "/root/dingmengru/data/action/include_animal_v1/valid_greater4.jsonl",
     "model": {
         "type": "text_classifier_fscore_focal_loss",
         "text_field_embedder": {
@@ -34,18 +38,17 @@
            "pretrained_model": "/root/dingmengru/model/pretrained_bert/chinese_wwm_ext_pytorch",
            "requires_grad": false
         },
-        "dropout": 0.25,
         "loss":"focal_loss"
 },
 
     "data_loader": {
-        "batch_size": 16,
+        "batch_size": batch_size,
         "shuffle": true
     },
     "trainer": {
         "optimizer": {
             "type": "huggingface_adamw",
-            "lr": 1.0e-5
+            "lr": lr
         },
         "num_epochs": 5,
         "validation_metric": "+accuracy",

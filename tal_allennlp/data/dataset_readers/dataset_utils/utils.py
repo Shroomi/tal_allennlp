@@ -89,7 +89,7 @@ def process_other_data(data_path, file_name, source='train'):
     :return:
     """
     data = pd.read_json(os.path.join(data_path, file_name), orient='records')
-    with open(os.path.join(data_path, file_name.split('.')[0]+'.jsonl'), 'w', encoding='utf-8') as fout:
+    with open(os.path.join(data_path, file_name.split('.')[0] + '.jsonl'), 'w', encoding='utf-8') as fout:
         for index, row in tqdm(data.iterrows()):
             # print(row['text'], row['label'])
             fout.write(json.dumps(
@@ -121,8 +121,51 @@ def people_daily_preprocess(source_file=None, target_file=None, output_file='tra
 
 
 def cal_pos_neg(data_path, file_name):
+    """
+    计算标签的正负比
+    :param data_path:
+    :param file_name:
+    :return:
+    """
     data_frame = pd.read_json(os.path.join(data_path, file_name), lines=True)
+    print(data_frame['label'].value_counts()[0])
+    print(data_frame['label'].value_counts()[1])
     print(data_frame['label'].value_counts()[0] / data_frame['label'].value_counts()[1])
+
+
+def generate_tvt_files(input_file, train_file, valid_file, test_file):
+    """
+    根据tag文件，生成训练集，评价集，测试集
+    :param input_file: 投票结束后的标注单文件
+    :param train_file: 训练集
+    :param valid_file: 评价集
+    :param test_file: 测试集
+    :return:
+    """
+    change_labels = {
+        '-2': 0,
+        '-1': 0,
+    }
+    with open(os.path.join(TAG_PATH, input_file), 'r') as fin, \
+            open(os.path.join(DATA_PATH, train_file), 'w', encoding='utf-8') as train_fout, \
+            open(os.path.join(DATA_PATH, valid_file), 'w', encoding='utf-8') as valid_fout, \
+            open(os.path.join(DATA_PATH, test_file), 'w', encoding='utf-8') as test_fout:
+
+        file_map = {
+            'train': train_fout,
+            'valid': valid_fout,
+            'test': test_fout,
+        }
+
+        for line in tqdm(fin):
+            data = json.loads(line)
+            label = data['label']
+            if label in change_labels:
+                label = change_labels[label]
+            file_map[data['source']].write(json.dumps({
+                'text': data['text'],
+                'label': label,
+            }, ensure_ascii=False) + '\n')
 
 
 if __name__ == '__main__':
@@ -132,5 +175,6 @@ if __name__ == '__main__':
     # load_emb_info('tencent_big')
     # load_dense_drop_repeat('tencent_big', 'v04_embeddings.json', 200)
     # process_other_data(DATA_PATH, 'test_old_ding.json', source='test_old')
-    # cal_pos_neg(DATA_PATH, 'tmp_tr.jsonl')
-    people_daily_preprocess(source_file='source_BIO_2014_cropus.txt', target_file='target_BIO_2014_cropus.txt')
+    cal_pos_neg(DATA_PATH, 'test_ding.jsonl')
+    # people_daily_preprocess(source_file='source_BIO_2014_cropus.txt', target_file='target_BIO_2014_cropus.txt')
+    # generate_tvt_files('final_tag_greater4.jsonl', 'train_greater4.jsonl', 'valid_greater4.jsonl', 'test_greater4.jsonl')
